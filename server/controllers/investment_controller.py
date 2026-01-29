@@ -11,4 +11,5 @@ router = APIRouter(
 async def investment_data_upload(file: Annotated[UploadFile, File(...)]):
     validate_investment_response = await validate_investment_dataset(file)
     access_token = validate_investment_response["access_token"]
-    return {"access_token": access_token}
+    final_rows = validate_investment_response["final rows"]
+    return {"access_token": access_token, "final rows": final_rows}

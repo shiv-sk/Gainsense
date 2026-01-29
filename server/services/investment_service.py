@@ -45,6 +45,10 @@ async def validate_investment_dataset(file: Annotated[UploadFile, File(...)]):
         if parsed:
             rows.append(parsed)
     dataset_id = uuid.uuid4()
+    if len(rows) == 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="At least one valid row is required")
+    for row in rows:
+        row["dataset_id"] = dataset_id
     print(f"dataset_id is! {dataset_id}")
     access_token = create_access_token(dataset_id)
     return {"final rows": rows, "access_token": access_token}
