@@ -1,12 +1,13 @@
-from typing import Annotated
-from fastapi import UploadFile, File, HTTPException, status
+from fastapi import UploadFile, HTTPException, status
 import csv
 from datetime import  datetime
 from io import StringIO
 import uuid
 
+from sqlalchemy import insert
+from sqlalchemy.orm import Session
+from models.invest_model import Investment
 from utils.handle_JWTtoken import create_access_token
-
 
 def parse_row(row: dict):
     if not row:
@@ -28,7 +29,7 @@ def parse_row(row: dict):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid row format {row}")
 
 
-async def validate_investment_dataset(file: Annotated[UploadFile, File(...)]):
+async def validate_investment_dataset(file: UploadFile, db: Session):
     allowed_file_type = ["text/csv"]
     if file.content_type not in allowed_file_type:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only CSV files are allowed!")
@@ -49,6 +50,10 @@ async def validate_investment_dataset(file: Annotated[UploadFile, File(...)]):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="At least one valid row is required")
     for row in rows:
         row["dataset_id"] = dataset_id
+    stmt = insert(Investment).values(rows)
+    executing_statement = db.execute(stmt)
+    db.commit()
+    print(f"printing executing statement {executing_statement}")
     print(f"dataset_id is! {dataset_id}")
     access_token = create_access_token(dataset_id)
     return {"final rows": rows, "access_token": access_token}
