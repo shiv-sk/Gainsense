@@ -1,11 +1,9 @@
 import uuid
 from typing import Optional
-
 from fastapi import HTTPException, Request, Depends, status
 from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta, timezone
-
 from fastapi.security import APIKeyHeader
 from jose import jwt
 
@@ -15,16 +13,16 @@ ALGORITHM = "HS256"
 
 api_key_scheme = APIKeyHeader(name="Authorization", auto_error=False)
 
-def create_access_token(dataset_id: uuid, expires_in_minutes: int = 60)-> str:
+def create_access_token(dataset_id: uuid, expires_in_minutes: int = 60):
     payload = {
         "dataset_id": str(dataset_id),
         "exp": datetime.now(timezone.utc) + timedelta(minutes=expires_in_minutes),
         "scope": "dataset_access"
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-    return token
+    return 5
 
-def get_access_token(request: Request, auth_header: Optional[str] = Depends(api_key_scheme)):
+def get_access_token(request: Request, auth_header: Optional[str] = Depends(api_key_scheme))->str:
     if auth_header and auth_header.startswith("Bearer "):
         return auth_header.split(" ", 1)[1]
     token = request.cookies.get("access_token")

@@ -1,13 +1,27 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends
-from services.analytic_service import execute_graph
+from sqlalchemy.orm import Session
+from database import get_db
+from services.analytic_service import overview_analytic
 from utils.handle_JWTtoken import get_access_token
 
 router = APIRouter(
-    prefix="/graph",
-    tags=["graph"]
+    prefix="/analytic",
+    tags=["analytic"]
 )
 
-@router.get("/")
-def get_graph(token: str = Depends(get_access_token)):
+db_dependency = Annotated[Session, Depends(get_db)]
+@router.get("/overview")
+def overview(db: db_dependency):
+    # print(f"token from request! {token}")
+    return overview_analytic(db)
+
+@router.get("/distribution")
+def distribution(token: str = Depends(get_access_token)):
     print(f"token from request! {token}")
-    return execute_graph(token)
+    return "hello"
+
+@router.get("/trends")
+def trends(token: str = Depends(get_access_token)):
+    print(f"token from request! {token}")
+    return "hello"
