@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import get_db
-from services.analytic_service import overview_analytic
+from services.analytic_service import overview_analytic, distribution_analytic, by_type_analytic
 from utils.handle_JWTtoken import get_access_token
 
 router = APIRouter(
@@ -17,11 +17,12 @@ def overview(db: db_dependency):
     return overview_analytic(db)
 
 @router.get("/distribution")
-def distribution(token: str = Depends(get_access_token)):
-    print(f"token from request! {token}")
-    return "hello"
+def distribution(db: db_dependency):
+    # token: str = Depends(get_access_token)
+    # print(f"token from request! {token}")
+    return distribution_analytic(db)
 
-@router.get("/trends")
-def trends(token: str = Depends(get_access_token)):
-    print(f"token from request! {token}")
-    return "hello"
+@router.get("/by_type")
+def by_type(db: db_dependency):
+    # print(f"token from request! {token}")
+    return by_type_analytic(db)
