@@ -17,8 +17,8 @@ def overview_analytic(db: Session):
                   func.sum(Investment.investment_amount).label("total_invested"),
                   func.sum(Investment.investment_amount * Investment.return_percent)
                   .label("overall_profit_loss"),
-                  func.max(Investment.return_percent).label("highest_returns"),
-                  func.min(Investment.return_percent).label("lowest_returns")
+                  func.max(Investment.return_percent * Investment.investment_amount).label("single_highest_profit"),
+                  func.min(Investment.return_percent * Investment.investment_amount).label("single_lowest_profit")
         ).where(Investment.dataset_id == dataset_id)
     )
     over_result = db.execute(stmt1).one()
@@ -41,6 +41,7 @@ def overview_analytic(db: Session):
 def distribution_analytic(db: Session):
     total_invested = func.sum(Investment.investment_amount).label('total_invested')
     stmt = select(Investment.investment_type,
+                  func.sum(Investment.investment_amount * Investment.return_percent).label('profit_loss'),
                   total_invested
                   ).where(Investment.dataset_id == dataset_id).group_by(Investment.investment_type).order_by(total_invested)
     results = db.execute(stmt).mappings().all()
@@ -49,7 +50,20 @@ def distribution_analytic(db: Session):
 def by_type_analytic(db: Session):
     total_invested = func.sum(Investment.investment_amount).label('total_invested')
     profit_loss = func.sum(Investment.investment_amount * Investment.return_percent).label('profit_loss')
-    avg_returns = (func.sum(Investment.investment_amount * Investment.return_percent) / func.sum(Investment.investment_amount)).label('Avg_returns')
-    stmt = select(Investment.investment_type, total_invested, profit_loss, avg_returns).where(Investment.dataset_id == dataset_id).group_by(Investment.investment_type).order_by(profit_loss)
+    avg_returns = (func.sum(Investment.investment_amount * Investment.return_percent) /
+                   func.sum(Investment.investment_amount)).label('Avg_returns')
+    stmt = (select(Investment.investment_type, total_invested, profit_loss, avg_returns)
+            .where(Investment.dataset_id == dataset_id)
+            .group_by(Investment.investment_type)
+            .order_by(profit_loss))
+    results = db.execute(stmt).mappings().all()
+    return results
+
+def trends_analytic(db: Session):
+    profit_loss = func.sum(Investment.investment_amount * Investment.return_percent).label('profit_loss')
+    year_wise = func.to_char(Investment.investment_date, 'YYYY').label('year_wise')
+    stmt = (select(year_wise, profit_loss)
+            .where(Investment.dataset_id == dataset_id)
+            .group_by(year_wise).order_by(year_wise))
     results = db.execute(stmt).mappings().all()
     return results
