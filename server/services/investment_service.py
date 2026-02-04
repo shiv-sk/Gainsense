@@ -3,38 +3,33 @@ import csv
 from datetime import  datetime
 from io import StringIO
 import uuid
-
 from sqlalchemy import insert
 from sqlalchemy.orm import Session
 from models.invest_model import Investment
-from utils.handle_JWTtoken import create_access_token
+
+class InvalidInvestmentRow(Exception):
+    pass
 
 def parse_row(row: dict):
     if not row:
         return None
     try:
         return_percent = float(row["return_percent"])
-    except KeyError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid row format {row}")
-    if return_percent < -100:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="return percent cannot be less than -100%")
-    try:
+        if return_percent < -100:
+            raise InvalidInvestmentRow("return percent cannot be less than -100%")
         return {
             "investment_type": row["investment_type"],
             "investment_amount": float(row["investment_amount"]),
             "investment_date": datetime.strptime(row["investment_date"], "%Y-%m-%d"),
-            "return_percent": float(row["return_percent"])/100
+            "return_percent": float(row["return_percent"]) / 100
         }
-    except KeyError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid row format {row}")
+    except (KeyError, ValueError) as e:
+        raise InvalidInvestmentRow(str(e))
 
 
 async def validate_investment_dataset(file: UploadFile, db: Session):
-    allowed_file_type = ["text/csv"]
-    if file.content_type not in allowed_file_type:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only CSV files are allowed!")
-    content = await file.read()
     try:
+        content = await file.read()
         text = content.decode("utf-8")
     except UnicodeDecodeError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="CSV must be UTF-8 encoded")
@@ -47,13 +42,11 @@ async def validate_investment_dataset(file: UploadFile, db: Session):
             rows.append(parsed)
     dataset_id = uuid.uuid4()
     if len(rows) == 0:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="At least one valid row is required")
+        raise ValueError("At least one valid row is required")
     for row in rows:
         row["dataset_id"] = dataset_id
-    stmt = insert(Investment).values(rows)
-    executing_statement = db.execute(stmt)
-    db.commit()
-    print(f"printing executing statement {executing_statement}")
-    print(f"dataset_id is! {dataset_id}")
-    access_token = create_access_token(dataset_id)
-    return {"final rows": rows, "access_token": access_token}
+    # stmt = insert(Investment).values(rows)
+    # db.execute(stmt)
+    # db.commit()
+    print(f"rows are {rows}")
+    return dataset_id

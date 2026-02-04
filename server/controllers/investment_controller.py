@@ -1,9 +1,9 @@
 from typing import Annotated
-from fastapi import APIRouter, status, UploadFile, File, Depends
+from fastapi import APIRouter, status, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from database import get_db
-from services.investment_service import validate_investment_dataset
+from services.investment_service import validate_investment_dataset, InvalidInvestmentRow
+from utils.handle_JWTtoken import create_access_token
 
 router = APIRouter(
     prefix="/investment",
@@ -13,4 +13,14 @@ router = APIRouter(
 db_dependency = Annotated[Session, Depends(get_db)]
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def investment_data_upload(file: Annotated[UploadFile, File(...)], db: db_dependency):
-    return await validate_investment_dataset(file, db)
+    allowed_file_type = ["text/csv"]
+    if file.content_type not in allowed_file_type:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only CSV files are allowed!")
+    try:
+        dataset_id = await validate_investment_dataset(file, db)
+        access_token = create_access_token(dataset_id)
+        return {"dataset_id": dataset_id, "access_token": access_token}
+    except InvalidInvestmentRow as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
