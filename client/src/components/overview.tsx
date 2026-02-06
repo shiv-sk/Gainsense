@@ -1,10 +1,10 @@
-import { OverviewTable } from "@/interface/overviewinterface";
+import { OverviewTable as OverviewTableInterface } from "@/interface/overviewinterface";
 import Card from "./cards/card";
-import Table from "./table/table";
+import OverviewTable from "./table/overviewtable";
 
 export default function Overview(
     {tableData, netProfitLoss, maxProfit, minProfit, totalInvested}: 
-    {tableData: OverviewTable[], netProfitLoss: number, maxProfit: number, minProfit: number, totalInvested: number}){
+    {tableData: OverviewTableInterface[], netProfitLoss: number, maxProfit: number, minProfit: number, totalInvested: number}){
     const headers = ["investment_type", "investment_amount", "return_percent", "profit_loss"];
     return(
         <div className="space-y-4 py-4">
@@ -38,7 +38,7 @@ export default function Overview(
                 tooltipColor="tooltip-primary" />
             </div>
             <div>
-                <Table headers={headers} tableData={tableData} />
+                <OverviewTable headers={headers} tableData={tableData} />
             </div>
         </div>
     )

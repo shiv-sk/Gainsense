@@ -3,7 +3,7 @@
 import Card from "@/components/cards/card";
 import Barchart from "@/components/charts/barchart";
 import FileDropzone from "@/components/draganddrop";
-import Table from "@/components/table/table";
+import Table from "@/components/table/overviewtable";
 import { useState } from "react";
 
 export default function UploadFile(){
@@ -47,7 +47,6 @@ export default function UploadFile(){
       value={10000}
       className={"tooltip-info"} />
       <Table headers={headers} tableData={tableData} />
-      <Barchart/>
       </>
     )
 }

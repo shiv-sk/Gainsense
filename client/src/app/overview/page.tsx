@@ -30,7 +30,7 @@ export default function OverviewPage(){
                     tableData={tableData} 
                     netProfitLoss={5000}
                     maxProfit={20000} 
-                    minProfit={5000} 
+                    minProfit={5000}
                     totalInvested={200000} />
                 </div>
                 
