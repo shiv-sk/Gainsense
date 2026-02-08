@@ -1,15 +1,11 @@
-from uuid import UUID
 from fastapi import HTTPException, status
 from fastapi.logger import logger
 from sqlalchemy import select, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-
 from models.invest_model import Investment
-from utils.handle_JWTtoken import get_dataset_id_access_token
 
-dataset_id = UUID("9fdacf08-86af-405e-bed3-0d18ee2d630e")
-def overview_analytic(db: Session):
+def overview_analytic(db: Session, dataset_id):
     try:
         # dataset_id = get_dataset_id_access_token(token)
 
@@ -29,29 +25,31 @@ def overview_analytic(db: Session):
                 net_profit_loss
             ).where(Investment.dataset_id == dataset_id).order_by(net_profit_loss)
         )
-        table_result = db.execute(stmt2).mappings().all()
+        overview_table = db.execute(stmt2).mappings().all()
         return {
             "total_invested": over_result.total_invested,
             "overall_profit_loss": over_result.overall_profit_loss,
             "single_highest_profit": over_result.single_highest_profit,
             "single_lowest_profit": over_result.single_lowest_profit,
-            "table": table_result
+            "overview_table": overview_table
         }
     except SQLAlchemyError as e:
         db.rollback()
         logger.error(e)
         raise
 
-def distribution_analytic(db: Session):
+def distribution_analytic(db: Session, dataset_id):
     try:
         # dataset_id = get_dataset_id_access_token(token)
         total_invested_per_type = func.sum(Investment.investment_amount).label('total_invested_per_type')
         avg_returns_per_type = (func.sum(Investment.investment_amount * Investment.return_percent) /
                                 func.sum(Investment.investment_amount)).label('Avg_returns_per_type')
+        profit_loss_per_type = (func.sum(Investment.investment_amount * Investment.return_percent)
+                                .label('profit_loss_per_type'))
         stmt = (
             select(
                 Investment.investment_type,
-                func.sum(Investment.investment_amount * Investment.return_percent).label('profit_loss_per_type'),
+                profit_loss_per_type,
                 total_invested_per_type,
                 avg_returns_per_type
             )
@@ -78,7 +76,6 @@ def by_type_analytic(db: Session):
             select(
                 Investment.investment_type, total_invested_per_type, profit_loss_per_type, avg_returns_per_type
             )
-            .where(Investment.dataset_id == dataset_id)
             .group_by(Investment.investment_type)
             .order_by(profit_loss_per_type)
         )
@@ -89,7 +86,7 @@ def by_type_analytic(db: Session):
         logger.error(e)
         raise
 
-def trends_analytic(db: Session):
+def trends_analytic(db: Session, dataset_id):
     try:
         # dataset_id = get_dataset_id_access_token(token)
         total_invested_per_year = func.sum(Investment.investment_amount).label('total_invested_per_year')
