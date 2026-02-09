@@ -28,9 +28,9 @@ def overview_analytic(db: Session, dataset_id):
         overview_table = db.execute(stmt2).mappings().all()
         return {
             "total_invested": over_result.total_invested,
-            "overall_profit_loss": over_result.overall_profit_loss,
-            "single_highest_profit": over_result.single_highest_profit,
-            "single_lowest_profit": over_result.single_lowest_profit,
+            "overall_profit_loss": over_result.net_profit_loss,
+            "single_highest_profit": over_result.single_investment_highest_profit,
+            "single_lowest_profit": over_result.single_investment_lowest_profit,
             "overview_table": overview_table
         }
     except SQLAlchemyError as e:

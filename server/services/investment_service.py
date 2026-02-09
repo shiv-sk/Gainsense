@@ -45,8 +45,8 @@ async def validate_investment_dataset(file: UploadFile, db: Session):
         raise ValueError("At least one valid row is required")
     for row in rows:
         row["dataset_id"] = dataset_id
-    # stmt = insert(Investment).values(rows)
-    # db.execute(stmt)
-    # db.commit()
+    stmt = insert(Investment).values(rows)
+    db.execute(stmt)
+    db.commit()
     print(f"rows are {rows}")
     return dataset_id

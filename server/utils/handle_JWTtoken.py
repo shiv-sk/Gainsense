@@ -28,7 +28,7 @@ def get_access_token(request: Request, auth_header: Optional[str] = Depends(api_
     token = request.cookies.get("access_token")
     if token:
         return token
-    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="token not found!")
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="token not found00000!")
 
 def get_dataset_id_access_token(token: str)-> str:
     try:
