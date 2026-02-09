@@ -3,11 +3,13 @@
 import UploadBtn from "@/components/button/uploadBtn";
 import FileDropzone from "@/components/draganddrop";
 import { useUploadCsv } from "@/customhooks/uploadCsv";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function UploadFile(){
     const [file, setFile] = useState<File | null>(null);
     const { isLoading, uploadCsv, error } = useUploadCsv();
+    const router = useRouter();
     const handleUpload = async()=>{
       if(!file){
         alert("please select CSV file!");
@@ -16,6 +18,7 @@ export default function UploadFile(){
         if(response){
           sessionStorage.setItem("access_token", response.access_token);
           sessionStorage.setItem("dataset_id", response.dataset_id);
+          router.push("/overview");
         }
       }
     }
