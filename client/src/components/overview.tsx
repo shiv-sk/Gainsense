@@ -5,13 +5,20 @@ import OverviewTable from "./table/overviewtable";
 export default function Overview(
     {tableData, netProfitLoss, maxProfit, minProfit, totalInvested}: 
     {tableData: OverviewTableInterface[], netProfitLoss: number, maxProfit: number, minProfit: number, totalInvested: number}){
-    const headers = ["investment_type", "investment_amount", "return_percent", "profit_loss"];
+    const headers = ["Investment_type", "Investment_amount", "Return_percent", "Profit_loss"];
     return(
-        <div className="space-y-4 py-4">
+        <div className="space-y-10 py-4">
             <div className="flex flex-wrap justify-center items-center gap-2">
                 <Card 
+                datatip={"Total capital invested"} 
+                header={"Total Invested"} 
+                value={totalInvested}
+                cardColor="bg-primary/30"
+                tooltipColor="tooltip-primary" />
+
+                <Card 
                 datatip={"Net profit or loss across all investments"} 
-                header={"Net P/L"} 
+                header={"Total Net P/L"} 
                 value={netProfitLoss}
                 cardColor="bg-info/30"
                 tooltipColor="tooltip-info" />
@@ -29,13 +36,6 @@ export default function Overview(
                 value={minProfit}
                 cardColor="bg-warning/30"
                 tooltipColor="tooltip-warning" />
-
-                <Card 
-                datatip={"Total capital invested"} 
-                header={"Total Invested"} 
-                value={totalInvested}
-                cardColor="bg-primary/30"
-                tooltipColor="tooltip-primary" />
             </div>
             <div>
                 <OverviewTable headers={headers} tableData={tableData} />

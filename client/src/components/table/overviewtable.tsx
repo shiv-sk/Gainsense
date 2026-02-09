@@ -21,8 +21,12 @@ export default function OverviewTable({headers, tableData}: {headers: string[], 
                         <tr key={index} className="hover:bg-base-200">
                             <td>{data.investment_type}</td>
                             <td>{data.investment_amount}</td>
-                            <td>{data.return_percent}</td>
-                            <td>{data.profit_loss}</td>
+                            <td className={data.return_percent < 0 ? "text-error/70" : "text-success/70"}>
+                                {data.return_percent}%
+                            </td>
+                            <td className={data.net_profit_loss < 0 ? "text-error/70" : "text-success/70"}>
+                                ₹{data.net_profit_loss.toLocaleString()}
+                            </td>
                         </tr>
                     )) : (
                         <tr>

@@ -5,9 +5,10 @@ const getToken = ()=>{
     if(typeof window === "undefined") return;
     return sessionStorage.getItem("access_token") ?? "";
 }
-const token = getToken();
+
 const getAndDeleteReq = async(url: string , method: "GET" | "DELETE")=>{
     // console.log("baseurl from getanddelete req:" , baseUrl);
+    const token = getToken();
     try {
         const response = await axios({
             url,
@@ -27,6 +28,7 @@ const getAndDeleteReq = async(url: string , method: "GET" | "DELETE")=>{
 }
 
 const postAndPatchReq = async(url: string , method: "POST" | "PATCH" , data: object | FormData , isFormData=false)=>{
+    const token = getToken();
     try {
         const response = await axios({
             url,

@@ -20,8 +20,8 @@ export default function DistributionByType(
         tableData:DistributionByTypeTable[]
     }){
     return(
-        <div className="space-y-16 py-4">
-            <div>
+        <div className="space-y-10 py-4">
+            <div className="space-y-10">
                 <Barchart 
                 data={returnchartData} 
                 options={returnchartOptions}/>

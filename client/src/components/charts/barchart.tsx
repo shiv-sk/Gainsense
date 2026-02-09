@@ -58,5 +58,9 @@ export default function Barchart({data, options}: BarchartProps){
     // useEffect(()=>{
     //     delayedRef.current = false;
     // }, []);
-    return <Bar data={data} options={options} />;
+    return (
+        <div className="bg-base-200 shadow-lg rounded-lg">
+            <Bar data={data} options={options} />
+        </div>
+    )
 }
