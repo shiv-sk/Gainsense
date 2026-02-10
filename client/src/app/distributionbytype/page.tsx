@@ -11,7 +11,7 @@ export default function DistributionTypePage(){
     const investedData = distributionByType.length > 0 ? 
     distributionByType.map((distribution)=>(distribution.total_invested_per_type)) : []
     const returnData = distributionByType.length > 0 ? 
-    distributionByType.map((distribution)=>(distribution.Avg_returns_per_type)) : []
+    distributionByType.map((distribution)=>(+(distribution.Avg_returns_per_type * 100).toFixed(2))) : []
     const returnchartData = {
         labels: labels,
         datasets: [

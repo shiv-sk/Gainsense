@@ -16,7 +16,6 @@ export function useUploadCsv(){
             const formData = new FormData();
             formData.append("file", file);
             const response = await postAndPatchReq(`${baseUrl}/investment/upload`, "POST", formData, true);
-            console.log("response from uploadCsv file! ", response);
             return response;
         } catch (err) {
             if(isAxiosError(err)){

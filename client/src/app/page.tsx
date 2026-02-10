@@ -40,7 +40,15 @@ export default function UploadFile(){
                 </div>
               )
             }
-          <UploadBtn btnText={"Upload"} OnClick={handleUpload} isLoading={isLoading} disable={!file}/>
+          <UploadBtn 
+          btnText={"Upload"} 
+          OnClick={handleUpload} 
+          isLoading={isLoading} 
+          disable={!file}
+          className="btn-primary"/>
+          <UploadBtn btnText={"Download sample CSV"}
+          OnClick={() => window.open("/GainSense-sample-data.csv")}
+          className="btn-neutral"/>
         </div>
       </div>
     )
