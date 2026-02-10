@@ -24,7 +24,7 @@ def parse_row(row: dict):
             "return_percent": float(row["return_percent"]) / 100
         }
     except (KeyError, ValueError) as e:
-        raise InvalidInvestmentRow(str(e))
+        raise InvalidInvestmentRow(f'missing {str(e)}')
 
 
 async def validate_investment_dataset(file: UploadFile, db: Session):
