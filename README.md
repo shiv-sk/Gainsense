@@ -50,6 +50,20 @@ The project emphasizes backend data processing, analytics, and frontend visualiz
 - cd client
 - npm run dev
 
+### Sample csv
+[Download sample CSV](client/public/GainSense-sample-data.csv)
+
+**CSV Format**
+
+```csv
+investment_type,investment_amount,investment_date,return_percent
+Stock,5000,2022-03-15,12
+Mutual Fund,10000,2023-06-10,8
+Gold,7000,2024-01-05,10 
+```
+**Location**
+``` client/public/GainSense-sample-data.csv ```
+
 # Screenshots
 ![Page1](screenshots/gainsense-1.png)
 ![Page2](screenshots/gainsense-2.png)
@@ -62,5 +76,4 @@ coming soon
 # Links
 coming soon
 # Contact
-coming soon
 - email: shivanandcrew034@gmail.com
