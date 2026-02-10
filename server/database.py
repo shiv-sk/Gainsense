@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=5, max_overflow=10)
 session_local = sessionmaker(autocommit = False , autoflush = False , bind = engine)
 class Base(DeclarativeBase):
     pass

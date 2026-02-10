@@ -48,5 +48,4 @@ async def validate_investment_dataset(file: UploadFile, db: Session):
     stmt = insert(Investment).values(rows)
     db.execute(stmt)
     db.commit()
-    print(f"rows are {rows}")
     return dataset_id

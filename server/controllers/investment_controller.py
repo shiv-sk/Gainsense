@@ -14,7 +14,6 @@ db_dependency = Annotated[Session, Depends(get_db)]
 MAX_FILE_SIZE = 1 * 1024 * 1024
 @router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def investment_data_upload(file: Annotated[UploadFile, File(...)], response: Response, db: db_dependency):
-    print("controller passed! ")
     allowed_file_type = ["text/csv"]
     if file.content_type not in allowed_file_type:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only CSV files are allowed!")

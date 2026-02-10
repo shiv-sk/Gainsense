@@ -18,7 +18,6 @@ db_dependency = Annotated[Session, Depends(get_db)]
 @router.get("/overview", status_code=status.HTTP_200_OK)
 def overview(db: db_dependency, dataset_id: str = Depends(get_current_dataset_id)):
     # dataset_id: str = Depends(get_current_dataset_id)
-    print(f"dataset_id from request! {dataset_id}")
     try:
         return overview_analytic(db, dataset_id)
     except SQLAlchemyError:
@@ -28,7 +27,6 @@ def overview(db: db_dependency, dataset_id: str = Depends(get_current_dataset_id
 def distribution(db: db_dependency, dataset_id: str = Depends(get_current_dataset_id)):
     # dataset_id: str = Depends(get_current_dataset_id)
     # token: str = Depends(get_access_token) ---> do not use this
-    print(f"dataset_id from request! {dataset_id}")
     try:
         return distribution_analytic(db, dataset_id)
     except SQLAlchemyError:
@@ -46,7 +44,6 @@ def by_type(db: db_dependency):
 @router.get("/trends", status_code=status.HTTP_200_OK)
 def trends(db: db_dependency, dataset_id: str = Depends(get_current_dataset_id)):
     # dataset_id: str = Depends(get_current_dataset_id)
-    print(f"dataset_id from request! {dataset_id}")
     try:
         return trends_analytic(db, dataset_id)
     except SQLAlchemyError:
