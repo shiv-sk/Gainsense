@@ -16,6 +16,7 @@ The project emphasizes backend data processing, analytics, and frontend visualiz
 - Token-based data editing & viewing limits
 - Advanced filters (date range, asset type)
 - Export analytics as PDF/CSV
+- Reading Multiple Sheets
 
 # Tech Stack
 - Frontend: Next.js(React), Tailwind CSS / Daisyui
