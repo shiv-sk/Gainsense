@@ -76,7 +76,7 @@ Gold,7000,2024-01-05,10
 ![Page5](screenshots/gainsense-5.png)
 ![Page6](screenshots/gainsense-6.png)
 # Demo
-coming soon
+Demo: https://drive.google.com/file/d/1CLGYWEe4uEplDchqJN2pVU0Pz85XhTjE/view?usp=sharing
 # Links
 Live: https://gainsense.vercel.app
 # Contact
