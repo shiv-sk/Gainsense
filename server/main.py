@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     engine.dispose()
 app = FastAPI(lifespan = lifespan)
 
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:3000", "https://gainsense.vercel.app"]
 
 app.add_middleware(
     CORSMiddleware,
