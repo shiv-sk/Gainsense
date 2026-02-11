@@ -78,6 +78,6 @@ Gold,7000,2024-01-05,10
 # Demo
 coming soon
 # Links
-coming soon
+Live: https://gainsense.vercel.app
 # Contact
 - email: shivanandcrew034@gmail.com
